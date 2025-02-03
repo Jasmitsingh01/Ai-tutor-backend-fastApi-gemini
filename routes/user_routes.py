@@ -4,6 +4,9 @@ from schemas import  User,UserBase,Userlogin
 from crud import get_user_by_email,create_user,update_user,get_user_by_id
 from database import get_db
 from routes.service.auth import verify_password,create_access_token,create_refresh_token,verify_token,hash_password,verify_refresh_token
+
+
+
 router = APIRouter()
 
 
@@ -96,6 +99,20 @@ async def refresh_token(request:Request=None,response:Response=None,db:Session=D
       await update_user(db=db,refresh_token=refresh_token,access_token=access_token,id=user.id)
       response.set_cookie('access_token',user.access_token)
       response.set_cookie('refersh_token',user.refresh_token)
+      return user
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    
+
+@router.get('/user-details',response_model=User)
+def user_detail(token:str=Depends(get_token_from_cookie),request:Request=None,db:Session=Depends(get_db)):
+    try:
+      token = request._cookies.get('refersh_token') or  request._headers.get('Authorization').split('Bearer')[1].strip()
+      payload=verify_refresh_token(token=token)
+      user_id = payload.get("sub")
+      user=get_user_by_id(db=db,user_id=user_id)
+      if not user:
+          raise HTTPException(status_code=404,detail="User not found")
       return user
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
