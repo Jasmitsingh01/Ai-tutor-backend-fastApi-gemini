@@ -9,3 +9,4 @@ bcrypt==4.2.1  # Or your specific bcrypt version
 SQLAlchemy==2.0.37  # Or your specific SQLAlchemy version
 passlib==1.7.4  # Or your specific passlib version
 python-dotenv==1.0.1 # Or your specific python-dotenv version
+psycopg2==2.9.10
