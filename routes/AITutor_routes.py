@@ -60,7 +60,7 @@ async def ask_gemini(request: Request):
 
 
 
-@router.post("/run_code")
+@router.post("/runcode")
 async def run_code(request: Request):  # Use async and Request object
     try:
         data = await request.json()  # Asynchronously get JSON data
