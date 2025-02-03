@@ -4,6 +4,7 @@ from fastapi import APIRouter, Request, HTTPException
 from fastapi.responses import JSONResponse
 from dotenv import load_dotenv
 import google.generativeai as genai
+import subprocess  # Or use a Docker container for better sandboxing
 
 load_dotenv()
 genai.configure(api_key=os.environ["GEMINI_API_KEY"])
@@ -54,3 +55,30 @@ async def ask_gemini(request: Request):
     except Exception as e:
         print(f"Error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+    
+
+
+
+
+@router.post("/run_code")
+async def run_code(request: Request):  # Use async and Request object
+    try:
+        data = await request.json()  # Asynchronously get JSON data
+        code = data.get('code')
+
+        if not code:
+            raise HTTPException(status_code=400, detail="Code is required")
+
+
+        process = subprocess.run(['python', '-c', code], capture_output=True, text=True, timeout=10)
+
+        if process.returncode != 0:  # Check for non-zero return code (error)
+            raise HTTPException(status_code=400, detail=process.stderr)  # Raise HTTP exception with error
+
+        output = process.stdout
+        return {"output": output}
+
+    except subprocess.TimeoutExpired:
+        raise HTTPException(status_code=400, detail="Timeout")
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
