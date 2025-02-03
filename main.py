@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from database import engine
 from models import Base
-
+import uvicorn
 # Import routes here to avoid circular imports
 from routes import user_routes, AITutor_routes
 
@@ -31,6 +31,5 @@ def root():
     return "FastAPI Project Running!"
 
 
-if __name__=="main":
-    import uvicorn
-    uvicorn.run(app=app,host="127.0.0.1",port=5000)
+if __name__ == "__main__":  # Important for multiprocessing
+    uvicorn.run(app=app, host="127.0.0.1", port=5000, reload=True) #reloa
