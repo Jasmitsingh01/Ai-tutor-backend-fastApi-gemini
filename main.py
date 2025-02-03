@@ -29,3 +29,8 @@ app.include_router(AITutor_routes.router, prefix="/api/tutor")
 @app.get("/")
 def root():
     return "FastAPI Project Running!"
+
+
+if __name__=="main":
+    import uvicorn
+    uvicorn.run(app=app,host="127.0.0.1",port=5000)
