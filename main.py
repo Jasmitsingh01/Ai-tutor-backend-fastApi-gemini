@@ -15,7 +15,7 @@ app = FastAPI(title="FastAPI Project")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allows all origins
+    allow_origins=["http://localhost:5173"],  # Allows all origins
     allow_credentials=True,  # Consider if you need this (cookies, auth headers)
     allow_methods=["*"],  # Allows all methods (GET, POST, PUT, DELETE, etc.)
     allow_headers=["*"],  # Allows all headers
